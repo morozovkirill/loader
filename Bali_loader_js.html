@@ -1,0 +1,217 @@
+<!doctype html>
+
+<html lang="en">
+
+<head>
+
+  <style>
+
+    html, body
+    {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      padding: 0;
+    }
+
+    .div_container {
+      display: flex;
+      height: 100%;
+      width: 100%;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .svg_viewbox {
+      display: flex;
+      width: 320px;
+      height: 240px;
+    }
+
+    svg {
+      display: block;
+      position: absolute;
+    }
+
+    .svg_dot_grey {
+      fill: #cdcdcd;
+    }
+
+    .svg_dot_blue {
+      fill: #4a90e2;
+    }
+
+    .line_grey {
+      stroke: #cdcdcd;
+    }
+
+    .line_blue {
+      stroke: #4a90e2;
+    }
+
+  </style>
+
+</head>
+
+<body>
+
+  <div class="div_container">
+    <div class="svg_viewbox">
+
+      <svg width="320" height="240" viewBox="0 0 320 240">
+        <path class="line_grey" id="line_grey" fill="none" stroke-width="1" d="M 60 135 C 80 135 90 135 110 135 S 140 135 160 135 S 190 135 210 135 S 240 135 260 135"/>
+        <path class="line_blue" id="line_blue" fill="none" stroke-width="1" d="M 60 115 C 80 115 90 115 110 115 S 140 115 160 115 S 190 115 210 115 S 240 115 260 115"/>
+
+        <circle id="dot_grey_001" cx="60" cy="135" r="5" class="svg_dot_grey"/>
+        <circle id="dot_grey_002" cx="110" cy="135" r="5" class="svg_dot_grey"/>
+        <circle id="dot_grey_003" cx="160" cy="135" r="5" class="svg_dot_grey"/>
+        <circle id="dot_grey_004" cx="210" cy="135" r="5" class="svg_dot_grey"/>
+        <circle id="dot_grey_005" cx="260" cy="135" r="5" class="svg_dot_grey"/>
+
+        <circle id="dot_blue_001" cx="60" cy="115" r="5" class="svg_dot_blue"/>
+        <circle id="dot_blue_002" cx="110" cy="115" r="5" class="svg_dot_blue"/>
+        <circle id="dot_blue_003" cx="160" cy="115" r="5" class="svg_dot_blue"/>
+        <circle id="dot_blue_004" cx="210" cy="115" r="5" class="svg_dot_blue"/>
+        <circle id="dot_blue_005" cx="260" cy="115" r="5" class="svg_dot_blue"/>
+      </svg>
+
+    </div>
+  </div>
+
+</body>
+
+<script>
+
+  const wholeAnimationDuration = 5000;
+
+  var stageAnimationDuration = [];
+
+  var y1_delta = 20;
+  var y2_delta = -40;
+  var y1_start = 135;
+  var y2_start = 135;
+  var y3_start = 115;
+  var y4_start = 115;
+
+  var  LineGreyPath = '';
+  var  LineBluePath = '';
+
+  var DotsGrey = ['dot_grey_001', 'dot_grey_002', 'dot_grey_003', 'dot_grey_004', 'dot_grey_005'];
+
+  var DotsBlue = ['dot_blue_001', 'dot_blue_002', 'dot_blue_003', 'dot_blue_004', 'dot_blue_005'];
+
+  stageAnimationDuration[0] = 0;
+  stageAnimationDuration[1] = wholeAnimationDuration * 25 / 100;
+  stageAnimationDuration[2] = wholeAnimationDuration * 32.5 / 100;
+  stageAnimationDuration[3] = wholeAnimationDuration * 50 / 100;
+  stageAnimationDuration[4] = wholeAnimationDuration * 57.5 / 100;
+  stageAnimationDuration[5] = wholeAnimationDuration * 75 / 100;
+  stageAnimationDuration[6] = wholeAnimationDuration * 82.5 / 100;
+  stageAnimationDuration[7] = wholeAnimationDuration * 100 / 100;
+
+  function LoaderAnimation () {
+
+    var animationStartTime = 0;
+    var animationStage = 0;
+
+    this.startAnimation = function() {
+      animationStartTime = performance.now();
+      animationStage = 1;
+      requestAnimationFrame(update);
+    };
+
+    function update() {
+
+      var currentTime = performance.now();
+      var positionInAnimation = (currentTime - animationStartTime - stageAnimationDuration[animationStage - 1]) / (stageAnimationDuration[animationStage] - stageAnimationDuration[animationStage - 1]);
+
+      if (positionInAnimation > 1) positionInAnimation = 1;
+      positionInAnimation = (1 - Math.cos(positionInAnimation * Math.PI)) / 2;
+
+      var y1 = y1_start + y1_delta * positionInAnimation;
+      var y2 = y2_start + y2_delta * positionInAnimation;
+
+      var y3 = y3_start - y2_delta * positionInAnimation;
+      var y4 = y4_start - y1_delta * positionInAnimation;
+
+      LineGreyPath = "M 60 " + y1 + " C 80 " + y1 + " 90 " + y2 + " 110 " + y2 + " S 140 " + y1 + " 160 " + y1 + " S 190 " + y2 + " 210 " + y2 + " S 240 " + y1 + " 260 " + y1;
+
+      document.getElementById('line_grey').setAttribute('d', LineGreyPath);
+
+      document.getElementById(DotsGrey[0]).setAttribute('cy', y1);
+      document.getElementById(DotsGrey[2]).setAttribute('cy', y1);
+      document.getElementById(DotsGrey[4]).setAttribute('cy', y1);
+
+      document.getElementById(DotsGrey[1]).setAttribute('cy', y2);
+      document.getElementById(DotsGrey[3]).setAttribute('cy', y2);
+
+
+      LineBluePath = "M 60 " + y4 + " C 80 " + y4 + " 90 " + y3 + " 110 " + y3 + " S 140 " + y4 + " 160 " + y4 + " S 190 " + y3 + " 210 " + y3 + " S 240 " + y4 + " 260 " + y4;
+
+      document.getElementById('line_blue').setAttribute('d', LineBluePath);
+
+      document.getElementById(DotsBlue[0]).setAttribute('cy', y4);
+      document.getElementById(DotsBlue[2]).setAttribute('cy', y4);
+      document.getElementById(DotsBlue[4]).setAttribute('cy', y4);
+
+      document.getElementById(DotsBlue[1]).setAttribute('cy', y3);
+      document.getElementById(DotsBlue[3]).setAttribute('cy', y3);
+
+      if (positionInAnimation < 1) {
+        requestAnimationFrame(update);
+      }
+      else {
+
+        animationStage++;
+
+        y1_start = y1;
+        y2_start = y2;
+        y3_start = y3;
+        y4_start = y4;
+
+        switch (animationStage) {
+          case 2:
+            y1_delta = 10;
+            y2_delta = -10;
+            break;
+          case 3:
+            y1_delta = -70;
+            y2_delta = 70;
+            break;
+          case 4:
+            y1_delta = -10;
+            y2_delta = 10;
+            break;
+          case 5:
+            y1_delta = 70;
+            y2_delta = -70;
+            break;
+          case 6:
+            y1_delta = 10;
+            y2_delta = -10;
+            break;
+          case 7:
+            y1_delta = -30;
+            y2_delta = 50;
+            break;
+          case 8:
+            animationStage = 1;
+            y1_start = y2_start = 135;
+            y3_start = y4_start = 115;
+            y1_delta = 20;
+            y2_delta = -40;
+            animate.startAnimation();
+            break;
+        }
+        requestAnimationFrame(update);
+      }
+    }
+
+  }
+
+  var animate = new LoaderAnimation();
+  animate.startAnimation();
+
+</script>
+
+</html>
